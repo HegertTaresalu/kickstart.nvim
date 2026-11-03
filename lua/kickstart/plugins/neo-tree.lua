@@ -22,6 +22,13 @@ return {
       window = {
         mappings = {
           ['\\'] = 'close_window',
+          ['<CR>'] = function(state)
+            -- Ignore a duplicate Enter event from the terminal/key repeat.
+            local now = vim.uv.now()
+            if state._last_enter and now - state._last_enter < 250 then return end
+            state._last_enter = now
+            require('neo-tree.sources.filesystem.commands').open(state)
+          end,
         },
       },
     },
